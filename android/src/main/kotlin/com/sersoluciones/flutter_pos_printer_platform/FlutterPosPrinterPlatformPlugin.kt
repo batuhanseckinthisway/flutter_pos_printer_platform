@@ -273,9 +273,10 @@ class FlutterPosPrinterPlatformPlugin : FlutterPlugin, MethodCallHandler, Plugin
                 getUSBDeviceList(result)
             }
             call.method.equals("connectPrinter") -> {
+                val deviceId: Int? = call.argument("deviceId")
                 val vendor: Int? = call.argument("vendor")
                 val product: Int? = call.argument("product")
-                connectPrinter(vendor, product, result)
+                connectPrinter(deviceId, vendor, product, result)
             }
             call.method.equals("close") -> {
                 closeConn(result)
@@ -331,10 +332,10 @@ class FlutterPosPrinterPlatformPlugin : FlutterPlugin, MethodCallHandler, Plugin
         result.success(list)
     }
 
-    private fun connectPrinter(vendorId: Int?, productId: Int?, result: Result) {
-        if (vendorId == null || productId == null) return
+    private fun connectPrinter(deviceId: Int?, vendorId: Int?, productId: Int?, result: Result) {
+        if (deviceId == null || vendorId == null || productId == null) return
         adapter.setHandler(usbHandler)
-        if (!adapter.selectDevice(vendorId, productId)) {
+        if (!adapter.selectDevice(deviceId, vendorId, productId)) {
             result.success(false)
         } else {
             result.success(true)

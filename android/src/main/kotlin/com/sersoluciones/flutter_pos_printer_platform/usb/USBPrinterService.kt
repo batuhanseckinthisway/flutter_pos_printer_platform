@@ -101,15 +101,15 @@ class USBPrinterService private constructor(private var mHandler: Handler?) {
             return ArrayList(mUSBManager!!.deviceList.values)
         }
 
-    fun selectDevice(vendorId: Int, productId: Int): Boolean {
+    fun selectDevice(deviceId: Int, vendorId: Int, productId: Int): Boolean {
 //        Log.v(LOG_TAG, " status usb ______ $state")
-        if ((mUsbDevice == null) || (mUsbDevice!!.vendorId != vendorId) || (mUsbDevice!!.productId != productId)) {
+        if ((mUsbDevice == null) || (mUsbDevice!!.deviceId != deviceId) || (mUsbDevice!!.vendorId != vendorId) || (mUsbDevice!!.productId != productId)) {
             synchronized(printLock) {
                 closeConnectionIfExists()
                 val usbDevices: List<UsbDevice> = deviceList
                 for (usbDevice: UsbDevice in usbDevices) {
-                    if ((usbDevice.vendorId == vendorId) && (usbDevice.productId == productId)) {
-                        Log.v(LOG_TAG, "Request for device: vendor_id: " + usbDevice.vendorId + ", product_id: " + usbDevice.productId)
+                    if ((usbDevice.deviceId == deviceId) && (usbDevice.vendorId == vendorId) && (usbDevice.productId == productId)) {
+                        Log.v(LOG_TAG, "Request for device: device_id: " + usbDevice.deviceId + ", vendor_id: " + usbDevice.vendorId + ", product_id: " + usbDevice.productId)
                         closeConnectionIfExists()
                         mUSBManager!!.requestPermission(usbDevice, mPermissionIndent)
                         state = STATE_USB_CONNECTING
